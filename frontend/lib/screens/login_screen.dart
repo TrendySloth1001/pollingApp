@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import 'home_screen.dart';
+import '../config/app_colors.dart';
+import '../widgets/custom_button.dart';
+import 'main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = await _authService.signInWithGoogle();
       if (user != null && mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => MainScreen(user: user)),
         );
       } else {
         if (mounted) {
@@ -42,15 +44,38 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      backgroundColor: AppColors.background,
       body: Center(
-        child: _isLoading
-            ? const CircularProgressIndicator()
-            : ElevatedButton.icon(
-                onPressed: _handleSignIn,
-                icon: const Icon(Icons.login),
-                label: const Text('Sign in with Google'),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.eco, size: 80, color: AppColors.primary),
+              const SizedBox(height: 32),
+              Text(
+                'Welcome Back',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.text,
+                ),
               ),
+              const SizedBox(height: 12),
+              Text(
+                'Sign in to continue',
+                style: TextStyle(fontSize: 16, color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 48),
+              CustomButton(
+                onPressed: _handleSignIn,
+                text: 'Sign in with Google',
+                isLoading: _isLoading,
+                icon: const Icon(Icons.login),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
